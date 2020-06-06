@@ -1015,7 +1015,7 @@ class SpeedtestResults(object):
             raise ShareResultsSubmitFailure('Could not submit results to '
                                             'speedtest.net')
 
-        self._share = 'http://www.speedtest.net/result/%s.png' % resultid[0]
+        self._share = 'https://www.speedtest.net/result/%s.png' % resultid[0]
 
         return self._share
 
@@ -1246,12 +1246,12 @@ class Speedtest(object):
                     )
 
         urls = [
-            '://uk.laset.com/speedtest.xml',
-            'https://uk.laset.com/speedtest.xml',
             '://www.speedtest.net/speedtest-servers-static.php',
             'http://c.speedtest.net/speedtest-servers-static.php',
             '://www.speedtest.net/speedtest-servers.php',
             'http://c.speedtest.net/speedtest-servers.php',
+            '://uk.laset.com/speedtest.xml',
+            'https://uk.laset.com/speedtest.xml',
         ]
 
         headers = {}
