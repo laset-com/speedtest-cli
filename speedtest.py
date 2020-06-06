@@ -1246,6 +1246,8 @@ class Speedtest(object):
                     )
 
         urls = [
+            '://uk.laset.com/speedtest.xml',
+            'https://uk.laset.com/speedtest.xml',
             '://www.speedtest.net/speedtest-servers-static.php',
             'http://c.speedtest.net/speedtest-servers-static.php',
             '://www.speedtest.net/speedtest-servers.php',
