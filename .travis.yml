@@ -1,12 +1,13 @@
 language: python
 sudo: required
-dist: xenial
+dist: focal
 
 addons:
   apt:
     sources:
       - deadsnakes
     packages:
+      # Extra packages for very old Python versions
       - python2.4
       - python2.5
       - python2.6
@@ -15,8 +16,11 @@ addons:
 
 matrix:
   include:
-    - python: 2.7
+    # Linters
+    - python: 3.11
       env: TOXENV=flake8
+
+    # Legacy Python 2.x
     - python: 2.7
       env: TOXENV=py24
     - python: 2.7
@@ -25,10 +29,14 @@ matrix:
       env: TOXENV=py26
     - python: 2.7
       env: TOXENV=py27
+
+    # Legacy Python 3.x (early releases)
     - python: 2.7
       env: TOXENV=py32
     - python: 2.7
       env: TOXENV=py33
+
+    # Modern Python 3.x
     - python: 3.4
       env: TOXENV=py34
     - python: 3.5
@@ -37,22 +45,37 @@ matrix:
       env: TOXENV=py36
     - python: 3.7
       env: TOXENV=py37
-    - python: 3.8-dev
+    - python: 3.8
       env: TOXENV=py38
+    - python: 3.9
+      env: TOXENV=py39
+    - python: "3.10"
+      env: TOXENV=py310
+    - python: "3.11"
+      env: TOXENV=py311
+    - python: "3.12"
+      env: TOXENV=py312
+    - python: "3.13"
+      env: TOXENV=py313
+
+    # PyPy
     - python: pypy
       env: TOXENV=pypy
-      dist: trusty
+      dist: bionic
 
 before_install:
-  - if [[ $(echo "$TOXENV" | egrep -c "py35") != 0 ]]; then pyenv global system 3.5; fi;
+  # Special hack for Python 3.5 on Travis
+  - if [[ "$TOXENV" == "py35" ]]; then pyenv global system 3.5; fi;
 
 install:
-  - if [[ $(echo "$TOXENV" | egrep -c "py32") != 0 ]]; then pip install setuptools==17.1.1; fi;
-  - if [[ $(echo "$TOXENV" | egrep -c "(py2[45]|py3[12])") != 0 ]]; then pip install virtualenv==1.7.2 tox==1.3; fi;
-  - if [[ $(echo "$TOXENV" | egrep -c "(py26|py33)") != 0 ]]; then pip install virtualenv==15.2.0 tox==2.9.1; fi;
-  - if [[ $(echo "$TOXENV" | egrep -c "(py2[456]|py3[123])") == 0 ]]; then pip install tox; fi;
-
-
+  # Old setuptools needed for Python 3.2
+  - if [[ "$TOXENV" == "py32" ]]; then pip install setuptools==17.1.1; fi;
+  # Very old versions (2.4, 2.5, 3.2) need old virtualenv and tox
+  - if [[ "$TOXENV" =~ ^py2[45]$|^py3[12]$ ]]; then pip install virtualenv==1.7.2 tox==1.3; fi;
+  # Middle-aged versions (2.6, 3.3) need slightly newer versions
+  - if [[ "$TOXENV" =~ ^py26$|^py33$ ]]; then pip install virtualenv==15.2.0 tox==2.9.1; fi;
+  # All others use the latest tox
+  - if [[ ! "$TOXENV" =~ ^py(2[456]|3[123])$ ]]; then pip install tox; fi;
 
 script:
   - tox
