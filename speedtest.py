@@ -1246,8 +1246,8 @@ class Speedtest(object):
                     )
 
         urls = [
-            '://bench.laset.com/speedtest.xml',
-            'https://bench.laset.com/speedtest.xml',
+            '://bench.laset.com/speedtest-servers-all.xml',
+            'https://bench.laset.com/speedtest-servers-all.xml',
         ]
 
         headers = {}
